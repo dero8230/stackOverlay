@@ -53,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
     print("itemsAlignment: ${controller.itemsDataFilling.length} $index");
     final i = index + 1;
     if (index >= controller.itemsDataLength.value) {
-      return const Alignment(0, 20);
+      return const Alignment(0, 10);
     }
     return Alignment.topCenter;
   }
