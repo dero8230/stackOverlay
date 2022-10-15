@@ -1,45 +1,50 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:test_project_app/views/home_screen.dart';
+
 import '../views/add_money_widget.dart';
 import '../views/repay_money_widget.dart';
 import '../views/send_money_widget.dart';
 
-class HomePageController extends GetxController{
-  var itemsDataFilling = <Widget>[].obs;
-  var itemsDataPopped = <Widget>[].obs;
-  var initialSliderValue = 150000.0.obs;
-  var toggleBankBool = false.obs;
+class HomePageController extends GetxController {
+  HomePageController(this.updat);
+  final itemsDataFilling = <Widget>[].obs;
+  final itemsDataPopped = <Widget>[].obs;
+  Rx<double> initialSliderValue = 150000.0.obs;
+  Rx<bool> toggleBankBool = false.obs;
+  Rx<int> itemsDataLength = 0.obs;
+  GlobalKey<ScaffoldState>? homeKey;
+  final Function() updat;
+  @override
+  void onInit() {
+    addInitialDataToStack();
+    itemsDataLength.value = itemsDataFilling.length;
+    super.onInit();
+  }
 
-  addInitialDataToStack(context){
-    itemsDataFilling.add(AddMoneyToWallet());
+  addInitialDataToStack() {
+    itemsDataFilling.add(const AddMoneyToWallet());
     itemsDataFilling.add(RepayMoneyWidget());
     itemsDataFilling.add(SendMoneyWidget());
   }
 
-
-  removeAboveStackItem(var index){
-    if(index == itemsDataFilling.length - 1) return;
-    print("removeAboveStackItem: index item ${index} ${itemsDataFilling.length}");
-    int i = itemsDataFilling.length -1;
-    // int tempIndex = itemsDataFilling.length -1;
-    while(itemsDataFilling.isNotEmpty && i != index){
-      int lastIndex = itemsDataFilling.length -1;
-      Widget rem = itemsDataFilling.removeAt(lastIndex);
-      // animatedListKey.currentState?.removeItem(lastIndex, (context, animation) =>
-      //     HomeScreen().widgetListItem(context, lastIndex , animation),);
-      itemsDataPopped.add(rem);
+  removeAboveStackItem(int index, BuildContext context) {
+    if (index == itemsDataFilling.length - 1) return;
+    int i = itemsDataLength.value - 1;
+    final homeContext = homeKey!.currentContext;
+    while (i > index) {
+      itemsDataPopped.add(itemsDataFilling[i]);
+      itemsDataLength.value -= 1;
       i--;
+      update();
+      (context as Element).markNeedsBuild();
+      (homeContext as Element).markNeedsBuild();
+      updat.call();
     }
-    print("removeAboveStackItem:  ${itemsDataFilling.length}");
-    // animatedListKey.currentState?.removeItem(tempIndex-1, (context, animation) =>
-    //     HomeScreen().widgetListItem(context, tempIndex-1 , animation),);
-
+    print("removeAboveStackItem:  ${itemsDataLength.value}");
   }
 
-  updateBankToggle(var boolValue){
+  updateBankToggle(var boolValue) {
     toggleBankBool.value = boolValue;
   }
-
 }

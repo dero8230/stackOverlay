@@ -1,16 +1,22 @@
-import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:test_project_app/controller/home_page_controller.dart';
 import 'package:test_project_app/views/bottom_bar_widget.dart';
+
 import 'CategoriesScroller.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final CategoriesScroller categoriesScroller = CategoriesScroller();
   final animatedListKey = GlobalKey<AnimatedListState>();
-  final HomePageController controller = Get.put(HomePageController());
-  HomeScreen({super.key});
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+  final padding = 70.0;
 
   Future<bool> _onWillPop() async {
     print("onPop Called");
@@ -18,19 +24,47 @@ class HomeScreen extends StatelessWidget {
     return false;
   }
 
+  List<Widget> _buildList(HomePageController controller) {
+    print("buildList Called");
+    final widgets = <Widget>[];
+    for (int i = 0; i < controller.itemsDataFilling.length; i++) {
+      final alignment = itemsAlignment(i, controller);
+      final item = Padding(
+        padding: EdgeInsets.only(top: (padding * i)),
+        child: AnimatedAlign(
+            alignment: alignment,
+            duration: const Duration(milliseconds: 500),
+            child: controller.itemsDataFilling[i]),
+      );
+      widgets.add(item);
+    }
+    return widgets;
+  }
+
+  Alignment itemsAlignment(int index, HomePageController controller) {
+    print("itemsAlignment: ${controller.itemsDataFilling.length} $index");
+    final i = index + 1;
+    if (index >= controller.itemsDataLength.value) {
+      return const Alignment(0, 20);
+    }
+    return Alignment.topCenter;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final HomePageController controller = Get.put(HomePageController(() {
+      setState(() {});
+    }));
     final Size size = MediaQuery.of(context).size;
-    if(controller.itemsDataFilling.isEmpty) {
-      controller.addInitialDataToStack(context);
-    }
+    controller.homeKey = scaffoldKey;
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
         backgroundColor: const Color(0xff121419),
+        key: scaffoldKey,
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Color(0xff121419),
+          backgroundColor: const Color(0xff121419),
           leading: const Icon(
             Icons.cancel,
             color: Colors.grey,
@@ -46,10 +80,17 @@ class HomeScreen extends StatelessWidget {
             )
           ],
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            setState(() {});
+          },
+          child: const Icon(Icons.add),
+          backgroundColor: const Color(0xff1a1c29),
+        ),
         body: Stack(
-          // clipBehavior: Clip.none,
+          clipBehavior: Clip.hardEdge,
           children: [
-            Container(
+            SizedBox(
               height: size.height,
               // child: Stack(
               //   children: <Widget>[
@@ -69,7 +110,7 @@ class HomeScreen extends StatelessWidget {
               //
               //   ],
               child: Stack(
-              children: controller.itemsDataFilling.value,
+                children: _buildList(controller),
               ),
             ),
             Align(
@@ -83,10 +124,10 @@ class HomeScreen extends StatelessWidget {
     // return Scaffold(body: addMoneyToWallet());
   }
 
-  Widget widgetListItem(BuildContext context, int index, animation) {
+  /*Widget widgetListItem(BuildContext context, int index, animation) {
     return
-      // ScaleTransition(scale: animation,
-      SlideTransition(
+        // ScaleTransition(scale: animation,
+        SlideTransition(
       position: animation.drive(
         Tween(begin: const Offset(0.0, 3.0), end: const Offset(0.0, 0.0)),
       ),
@@ -94,7 +135,7 @@ class HomeScreen extends StatelessWidget {
       //controller.removeAboveStackItem(index, animatedListKey);
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: (){
+        onTap: () {
           print("tap on index $index");
           // controller.removeAboveStackItem(index, animatedListKey);
         },
@@ -103,8 +144,10 @@ class HomeScreen extends StatelessWidget {
           child: Align(
             // heightFactor: 0.2,
             //   heightFactor: 0.1,
-              alignment: Alignment.topCenter,
-              child: (index >= controller.itemsDataFilling.length) ? Container() : controller.itemsDataFilling[index],
+            alignment: Alignment.topCenter,
+            child: (index >= controller.itemsDataFilling.length)
+                ? Container()
+                : controller.itemsDataFilling[index],
           ),
         ),
         // child: Positioned(
@@ -118,5 +161,5 @@ class HomeScreen extends StatelessWidget {
         // ),
       ),
     );
-  }
+  }*/
 }
