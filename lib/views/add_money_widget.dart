@@ -40,7 +40,7 @@ class AddMoneyToWallet extends StatelessWidget {
               padding:
                   const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
               child: Obx(() {
-                if (homePageController.itemsDataFilling.length == 1) {
+                if (homePageController.itemsDataLength.value == 1) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -75,8 +75,7 @@ class AddMoneyToWallet extends StatelessWidget {
                             ],
                           ),
                           Obx(() {
-                            if (homePageController.itemsDataFilling.length !=
-                                1) {
+                            if (homePageController.itemsDataLength.value != 1) {
                               return const Icon(
                                 Icons.arrow_drop_down,
                                 color: Colors.grey,
@@ -214,7 +213,7 @@ class AddMoneyToWallet extends StatelessWidget {
                           ],
                         ),
                         Obx(() {
-                          if (homePageController.itemsDataFilling.length != 1) {
+                          if (homePageController.itemsDataLength.value != 1) {
                             return const Icon(
                               Icons.arrow_drop_down,
                               color: Colors.grey,

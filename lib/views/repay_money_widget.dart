@@ -44,7 +44,7 @@ class RepayMoneyWidget extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
                 child: Obx(() {
-                  if (controller.itemsDataFilling.length == 2) {
+                  if (controller.itemsDataLength.value == 2) {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -79,11 +79,12 @@ class RepayMoneyWidget extends StatelessWidget {
                               ],
                             ),
                             Obx(() {
-                              if (controller.itemsDataFilling.length != 2)
-                                return Icon(
+                              if (controller.itemsDataLength.value != 2) {
+                                return const Icon(
                                   Icons.arrow_downward_sharp,
                                   color: Colors.grey,
                                 );
+                              }
                               return Container();
                             })
                           ],

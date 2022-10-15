@@ -18,7 +18,8 @@ class BottomBarWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         print("ontap bottombar");
-        if (controller.itemsDataPopped.isEmpty) return;
+        if (controller.itemsDataPopped.isEmpty ||
+            controller.itemsDataLength.value == 3) return;
         controller.itemsDataLength.value = controller.itemsDataLength.value + 1;
         controller.updat.call();
         animatedListKey.currentState
