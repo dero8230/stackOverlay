@@ -17,6 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final animatedListKey = GlobalKey<AnimatedListState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final padding = 70.0;
+  int animationDuration = 1500;
 
   Future<bool> _onWillPop() async {
     print("onPop Called");
@@ -33,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: EdgeInsets.only(top: (padding * i)),
         child: AnimatedAlign(
             alignment: alignment,
-            duration: const Duration(milliseconds: 500),
+            duration: Duration(milliseconds: animationDuration),
             child: controller.itemsDataFilling[i]),
       );
       widgets.add(item);
@@ -79,13 +80,6 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () {},
             )
           ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            setState(() {});
-          },
-          child: const Icon(Icons.add),
-          backgroundColor: const Color(0xff1a1c29),
         ),
         body: Stack(
           clipBehavior: Clip.hardEdge,
