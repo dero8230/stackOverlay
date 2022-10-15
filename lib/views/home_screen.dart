@@ -20,6 +20,12 @@ class _HomeScreenState extends State<HomeScreen> {
   int animationDuration = 1500;
 
   Future<bool> _onWillPop() async {
+    final controller = Get.find<HomePageController>();
+    if (controller.itemsDataLength.value == 3) {
+      return false;
+    }
+    controller.itemsDataLength.value += 1;
+    setState(() {});
     print("onPop Called");
     // controller.removeAboveStackItem(controller.itemsDataFilling.length -2 >= 0 ? controller.itemsDataFilling.length -2 : 0, animatedListKey);
     return false;
@@ -34,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: EdgeInsets.only(top: (padding * i)),
         child: AnimatedAlign(
             alignment: alignment,
+            onEnd: () {},
             duration: Duration(milliseconds: animationDuration),
             child: controller.itemsDataFilling[i]),
       );

@@ -19,8 +19,8 @@ class BottomBarWidget extends StatelessWidget {
       onTap: () {
         print("ontap bottombar");
         if (controller.itemsDataPopped.isEmpty) return;
-        controller.itemsDataFilling
-            .add(controller.itemsDataPopped.removeLast());
+        controller.itemsDataLength.value = controller.itemsDataLength.value + 1;
+        controller.updat.call();
         animatedListKey.currentState
             ?.insertItem(controller.itemsDataFilling.length - 1);
         // setState(() {});
@@ -44,7 +44,7 @@ class BottomBarWidget extends StatelessWidget {
                 child: Obx(() => Text(
                       (controller.itemsDataFilling.isEmpty)
                           ? ""
-                          : bottomText[controller.itemsDataFilling.length - 1],
+                          : bottomText[controller.itemsDataLength.value - 1],
                       style: const TextStyle(
                           fontSize: 16,
                           color: Colors.white,
